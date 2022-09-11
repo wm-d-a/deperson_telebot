@@ -17,8 +17,10 @@ def start(message):
     print('/start')
     bot.send_message(message.from_user.id, 'Вы запустили бота для обезличивания данных.\n'
                                            'Вам необходимо указать следующие параметры:\n'
-                                           '/column_str: в этой команде нужно указать столбцы для обезличивания (Вводить через ";")\n'
-                                           '/column_json: в этой команде нужно указать столбцы содержащие json (Вводить через ";")\n'
+                                           '/column_str: в этой команде нужно указать столбцы для '
+                                           'обезличивания (Вводить через ";")\n'
+                                           '/column_json: в этой команде нужно указать столбцы '
+                                           'содержащие json (Вводить через ";")\n'
                                            '/json_exceptions: в этой команде нужно указать параметры json, которые не '
                                            'нужно обезличивать (Вводить через ";")\n'
                                            '/encoding: кодировка, по умолчанию utf-8\n\n'
@@ -95,12 +97,19 @@ def start_deperson(message):
             csv.writer(csv_write).writerows(data)
     except:
         bot.send_message(message.from_user.id,
-                         'Произошла ошибка при обезличивании файл, проверьте файл и повтроите оибку позже')
+                         'Произошла ошибка при обезличивании файла, проверьте файл и повторите попытку позже')
     else:
         bot.send_message(message.from_user.id, 'Файл успешно обезличен')
         bot.send_message(message.from_user.id, 'Загружаю файл...')
         file = open('new_query_result.csv', 'rb')
         bot.send_document(message.chat.id, file)
+        try:
+            os.remove(cur_dir + '\\' + 'new_query_result.csv')
+            os.remove(cur_dir + '\\' + 'file_name')
+        except:
+            bot.send_message(message.from_user.id, 'Произошла ошибка при удалении файлов на сервере бота')
+        else:
+            bot.send_message(message.from_user.id, '.csv файлы успешно удалены с сервера бота')
 
 
 bot.infinity_polling()
